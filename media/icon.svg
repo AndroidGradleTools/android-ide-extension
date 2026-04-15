@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Smartphone silhouette (currentColor); pairs with colored marketplace PNG -->
+  <path
+    fill="currentColor"
+    d="M15.5 1h-8A2.5 2.5 0 0 0 5 3.5v17A2.5 2.5 0 0 0 7.5 23h8a2.5 2.5 0 0 0 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zM11.5 21a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4-4H7V4h8.5v13z"
+  />
+</svg>
