@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f6f9" />
+    <title>Android Gradle Tools — Own the Android inner loop in VS Code</title>
+    <meta
+      name="description"
+      content="Gradle tasks, ADB, APK install in VS Code — stay in one editor with your AI agent, no Android Studio round-trips. One surface for code, agents, and the Android loop."
+    />
+    <meta name="application-name" content="Android Gradle Tools" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://androidgradletools.org/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Android Gradle Tools" />
+    <meta property="og:title" content="Android Gradle Tools — Android inner loop in VS Code" />
+    <meta
+      property="og:description"
+      content="Gradle tasks, ADB, and install flows in VS Code — open source, distributed via the Visual Studio Marketplace."
+    />
+    <meta property="og:url" content="https://androidgradletools.org/" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Android Gradle Tools — VS Code extension" />
+    <meta
+      name="twitter:description"
+      content="Gradle, ADB, and installs from the editor. Open source (MIT), published on the VS Code Marketplace."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Android Gradle Tools",
+        "description": "VS Code extension for Gradle tasks, Android targets, and APK install workflows.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "license": "https://opensource.org/licenses/MIT",
+        "isAccessibleForFree": true,
+        "url": "https://androidgradletools.org/",
+        "downloadUrl": "https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension",
+        "codeRepository": "https://github.com/cuongnv126/android-ide-extension",
+        "softwareHelp": {
+          "@type": "CreativeWork",
+          "url": "https://github.com/cuongnv126/android-ide-extension"
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true">
+      <div class="page-bg__base"></div>
+      <div class="page-bg__bloom page-bg__bloom--blue"></div>
+      <div class="page-bg__bloom page-bg__bloom--green"></div>
+      <div class="page-bg__bloom page-bg__bloom--violet"></div>
+      <div class="page-bg__mesh"></div>
+      <div class="page-bg__beam"></div>
+      <div class="page-bg__grid"></div>
+      <div class="page-bg__grain"></div>
+      <div class="page-bg__vignette"></div>
+    </div>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-top agt-nav-in" data-motion="nav">
+      <nav class="site-nav wrap" aria-label="Primary">
+        <a class="site-nav__brand" href="#">
+          <span class="icon icon--nav icon--ad" aria-hidden="true">android</span>
+          Android Gradle Tools
+        </a>
+        <div class="site-nav__links">
+          <a class="site-nav__link" href="#capabilities-heading"
+            ><span class="icon icon--inline" aria-hidden="true">widgets</span>Capabilities</a
+          >
+          <a class="site-nav__link" href="#install-heading"
+            ><span class="icon icon--inline" aria-hidden="true">download</span>Install</a
+          >
+          <a
+            class="site-nav__link site-nav__link--cta"
+            href="https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension"
+            rel="noopener noreferrer"
+            ><span class="icon icon--inline" aria-hidden="true">storefront</span>Marketplace</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <div class="trust-strip" aria-label="Project distribution and license">
+      <div class="wrap trust-strip__inner">
+        <ul class="trust-strip__list">
+          <li class="trust-strip__item">
+            <span class="icon trust-strip__icon" aria-hidden="true">verified_user</span>
+            <span>Published on the <strong>Visual Studio Marketplace</strong></span>
+          </li>
+          <li class="trust-strip__item">
+            <span class="icon trust-strip__icon" aria-hidden="true">license</span>
+            <span><strong>Open source</strong> — MIT</span>
+          </li>
+          <li class="trust-strip__item">
+            <span class="icon trust-strip__icon" aria-hidden="true">code</span>
+            <span
+              >Source &amp; issues:
+              <a href="https://github.com/cuongnv126/android-ide-extension" rel="noopener noreferrer">GitHub</a></span
+            >
+          </li>
+        </ul>
+        <ul class="trust-strip__metrics" aria-label="Marketplace highlights" data-reveal>
+          <li class="trust-strip__metric">
+            <span class="icon trust-strip__metric-icon" aria-hidden="true">download</span>
+            <span class="trust-strip__metric-stack">
+              <span class="trust-strip__metric-value">50+</span>
+              <span class="trust-strip__metric-label">Installs</span>
+            </span>
+          </li>
+          <li class="trust-strip__metric trust-strip__metric--rating">
+            <span class="icon trust-strip__metric-icon" aria-hidden="true">star</span>
+            <span class="trust-strip__metric-stack">
+              <span class="trust-strip__metric-value">5.0</span>
+              <span class="trust-strip__metric-label">Rating</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <header class="site-header">
+      <div class="wrap">
+        <div class="ide-window ide-window--motion" role="presentation" data-motion="hero">
+          <div class="ide-window__titlebar">
+            <span class="ide-window__traffic" aria-hidden="true">
+              <span class="ide-window__dot ide-window__dot--r"></span>
+              <span class="ide-window__dot ide-window__dot--y"></span>
+              <span class="ide-window__dot ide-window__dot--g"></span>
+            </span>
+            <span class="ide-window__title">
+              <span class="ide-window__icon" aria-hidden="true"></span>
+              <span class="ide-window__title-text">Android Gradle Tools</span>
+              <span class="ide-window__sep" aria-hidden="true">—</span>
+              <span class="ide-window__path">~/workspace</span>
+            </span>
+            <span class="ide-window__title-actions" aria-hidden="true">
+              <span class="ide-window__title-pill"></span>
+            </span>
+          </div>
+          <div class="ide-window__shell">
+            <div class="ide-window__activity" aria-hidden="true">
+              <span class="ide-window__activity-node ide-window__activity-node--active"></span>
+              <span class="ide-window__activity-node"></span>
+              <span class="ide-window__activity-node"></span>
+              <span class="ide-window__activity-node"></span>
+            </div>
+            <div class="ide-window__main">
+              <div class="ide-window__tabstrip" aria-hidden="true">
+                <span class="ide-window__tab ide-window__tab--active">
+                  <span class="ide-window__tab-led"></span>
+                  extension.json
+                </span>
+              </div>
+              <div class="ide-window__body">
+                <div class="hero-copy">
+                  <div class="hero-badges">
+                    <span class="badge badge--jb"
+                      ><span class="icon icon--badge" aria-hidden="true">code_blocks</span>VS Code–native</span
+                    >
+                    <span class="badge badge--android"
+                      ><span class="icon icon--badge" aria-hidden="true">layers</span>Gradle · AGP · SDK</span
+                    >
+                    <span class="badge badge--neutral"
+                      ><span class="icon icon--badge" aria-hidden="true">military_tech</span>Inner-loop grade</span
+                    >
+                  </div>
+                  <p class="hero-kicker">VS Code · Gradle · Android</p>
+                  <h1 class="hero-title">
+                    Command the <span class="hero-title__accent">build loop</span> from the editor.
+                  </h1>
+                  <p class="lead">
+                    Gradle tasks, ADB, install — <strong>one surface</strong>. Same <code class="inline-code">build.gradle</code>, less gap
+                    between <strong>green build</strong> and <strong>device</strong>.
+                  </p>
+                  <p class="hero-ai">
+                    <span class="hero-ai__tag">AI-ready</span>
+                    Code, agents, and toolchain steps in <strong>VS Code</strong> — fewer round-trips to a full IDE for routine loops.
+                  </p>
+                  <div class="hero-pipeline" role="group" aria-label="Development flow">
+                    <span class="hero-pipeline__step">Editor</span>
+                    <span class="hero-pipeline__arrow" aria-hidden="true">→</span>
+                    <span class="hero-pipeline__step">Gradle</span>
+                    <span class="hero-pipeline__arrow" aria-hidden="true">→</span>
+                    <span class="hero-pipeline__step">Device</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ide-window__status" aria-hidden="true">
+            <span class="ide-window__status-left">
+              <span class="ide-window__status-pill">main</span>
+              <span class="ide-window__status-sync">ready</span>
+            </span>
+            <span class="ide-window__status-right">Gradle · UTF-8 · LF</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="value-strip" aria-label="Positioning">
+      <div class="wrap">
+        <p class="value-strip__manifesto" data-reveal>
+          <strong>One surface</strong> for the inner loop.
+        </p>
+        <ul class="value-strip__list">
+          <li class="value-strip__item" data-reveal>
+            <span class="value-strip__icon-wrap" aria-hidden="true"
+              ><span class="icon icon--value icon--ad">bolt</span></span
+            >
+            <div class="value-strip__stack">
+              <span class="value-strip__label">Velocity</span>
+              <span class="value-strip__text">Faster from build to hardware.</span>
+            </div>
+          </li>
+          <li class="value-strip__item" data-reveal>
+            <span class="value-strip__icon-wrap" aria-hidden="true"
+              ><span class="icon icon--value icon--jb">verified</span></span
+            >
+            <div class="value-strip__stack">
+              <span class="value-strip__label">Fidelity</span>
+              <span class="value-strip__text">Gradle + SDK + ADB — local aligns with CI.</span>
+            </div>
+          </li>
+          <li class="value-strip__item" data-reveal>
+            <span class="value-strip__icon-wrap" aria-hidden="true"
+              ><span class="icon icon--value icon--mix">center_focus_strong</span></span
+            >
+            <div class="value-strip__stack">
+              <span class="value-strip__label">Focus</span>
+              <span class="value-strip__text">Code, agents, device — one editor.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <main id="main">
+      <section class="section" aria-labelledby="overview-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="overview-heading" class="section-heading">
+            <span class="section-heading__index">01</span>
+            Thesis
+          </h2>
+          <p class="lead-in">
+            Stop acting as a <strong>human router</strong> between editors, terminals, and device pickers.
+          </p>
+          <p>
+            This extension wires VS Code to the Gradle + AGP + SDK stack you already use — tasks, targets, and install in one flow.
+            <code class="inline-code">build.gradle</code> stays the source of truth; controls sit next to the code.
+          </p>
+          <p>
+            With agents in VS Code, fewer forced trips to a full IDE for routine Gradle or device steps —
+            <strong>stay in one surface.</strong>
+          </p>
+        </div>
+      </section>
+
+      <section class="section section--muted" aria-labelledby="why-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="why-heading" class="section-heading">
+            <span class="section-heading__index">02</span>
+            The hidden tax
+          </h2>
+          <p class="lead-in">Compilers are fast. <strong>Friction isn’t.</strong> It lives around the compile button.</p>
+          <ul class="list">
+            <li>Gradle in the wrong working directory</li>
+            <li>Guessing which device is attached</li>
+            <li>Install steps that don’t live next to your code</li>
+          </ul>
+          <p>
+            That’s fragmentation — not “how Android is.” This tool aims to <strong>own the loop from the editor</strong>, without
+            replacing your build.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="capabilities-heading" data-reveal>
+        <div class="wrap">
+          <div class="section-stack section-stack--center">
+            <h2 id="capabilities-heading" class="section-heading section-heading--center">
+              <span class="section-heading__index">03</span>
+              The arsenal
+            </h2>
+            <p class="section-deck">
+              <strong>A cockpit, not a junk drawer</strong> — Gradle, targets, install, detection.
+            </p>
+          </div>
+          <div class="arsenal-scroll-wrap">
+            <div
+              class="grid grid--arsenal"
+              role="region"
+              aria-label="Capabilities"
+              tabindex="0"
+            >
+              <article class="card">
+                <div class="card__accent card__accent--jb"></div>
+                <div class="card__head">
+                  <span class="icon icon--card icon--jb" aria-hidden="true">playlist_add_check</span>
+                  <h3>Gradle, navigable</h3>
+                </div>
+                <p>Browse Gradle tasks in the UI — less archaeology, more shipping.</p>
+              </article>
+              <article class="card">
+                <div class="card__accent card__accent--ad"></div>
+                <div class="card__head">
+                  <span class="icon icon--card icon--ad" aria-hidden="true">smartphone</span>
+                  <h3>Targets, unambiguous</h3>
+                </div>
+                <p>Pick devices and emulators with enough context to choose on purpose.</p>
+              </article>
+              <article class="card">
+                <div class="card__accent card__accent--mix"></div>
+                <div class="card__head">
+                  <span class="icon icon--card icon--mix" aria-hidden="true">install_mobile</span>
+                  <h3>Build → install, relentless</h3>
+                </div>
+                <p>Tight loop: build, push, verify — repeat until it runs on hardware.</p>
+              </article>
+              <article class="card">
+                <div class="card__accent card__accent--jb"></div>
+                <div class="card__head">
+                  <span class="icon icon--card icon--jb" aria-hidden="true">radar</span>
+                  <h3>Projects, detected</h3>
+                </div>
+                <p>Android Gradle projects surface with sane defaults for normal repos.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--muted" aria-labelledby="workflow-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="workflow-heading" class="section-heading">
+            <span class="section-heading__index">04</span>
+            The loop
+          </h2>
+          <p class="lead-in">Linear flow — <strong>write → build → target → install → run</strong>.</p>
+          <div class="workflow-rail workflow-rail--motion">
+            <div class="workflow-rail__track" aria-hidden="true"></div>
+            <ol class="workflow-steps">
+              <li
+                ><span class="workflow-steps__inner"
+                  ><span class="icon icon--wf" aria-hidden="true">edit_square</span>Write</span
+                ></li
+              >
+              <li
+                ><span class="workflow-steps__inner"
+                  ><span class="icon icon--wf" aria-hidden="true">build_circle</span>Build</span
+                ></li
+              >
+              <li
+                ><span class="workflow-steps__inner"
+                  ><span class="icon icon--wf" aria-hidden="true">my_location</span>Target</span
+                ></li
+              >
+              <li
+                ><span class="workflow-steps__inner"
+                  ><span class="icon icon--wf" aria-hidden="true">system_update</span>Install</span
+                ></li
+              >
+              <li
+                ><span class="workflow-steps__inner"
+                  ><span class="icon icon--wf" aria-hidden="true">play_arrow</span>Run</span
+                ></li
+              >
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="principles-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="principles-heading" class="section-heading">
+            <span class="section-heading__index">05</span>
+            Principles
+          </h2>
+          <p class="lead-in"><strong>Less theater</strong> around the toolchain.</p>
+          <ul class="list list--checks">
+            <li><strong>Respect Gradle</strong> — UI on top, not a replacement.</li>
+            <li><strong>Match CI</strong> — local runs should align with what pipelines enforce.</li>
+            <li><strong>Plain SDK/ADB</strong> — same binaries, visible flows.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section section--muted" aria-labelledby="compat-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="compat-heading" class="section-heading">
+            <span class="section-heading__index">06</span>
+            Compatibility
+          </h2>
+          <p>
+            Expects a normal Android/Gradle layout, AGP, SDK, and <code class="inline-code">local.properties</code> where applicable.
+          </p>
+          <ul class="list list--inline-tags">
+            <li><span class="icon icon--tag" aria-hidden="true">integration_instructions</span>AGP workflows</li>
+            <li><span class="icon icon--tag" aria-hidden="true">construction</span>Gradle builds</li>
+            <li><span class="icon icon--tag" aria-hidden="true">usb</span>Android SDK + ADB</li>
+            <li><span class="icon icon--tag" aria-hidden="true">view_quilt</span>Visual Studio Code</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="transparency-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="transparency-heading" class="section-heading">
+            <span class="section-heading__index">07</span>
+            Reality check
+          </h2>
+          <p>
+            Independent extension — <strong>not</strong> from Google or Gradle. Not a replacement for Android Studio when you need
+            the full IDE; it optimizes the daily <strong>write → build → target → prove</strong> loop in VS Code.
+          </p>
+          <p><strong>It does not:</strong> rewrite your Gradle files, replace Studio for niche tooling, or magic away the SDK.</p>
+        </div>
+      </section>
+
+      <section class="section cta" aria-labelledby="install-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="install-heading" class="section-heading section-heading--center">
+            <span class="section-heading__index">08</span>
+            Install
+          </h2>
+          <p class="section-deck section-deck--center">Free on the Visual Studio Marketplace.</p>
+          <p class="cta-actions">
+            <a
+              class="button button--primary"
+              href="https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension"
+              rel="noopener noreferrer"
+              ><span class="icon icon--btn" aria-hidden="true">download</span>Install from Marketplace</a
+            >
+            <a class="button button--ghost" href="https://github.com/cuongnv126/android-ide-extension" rel="noopener noreferrer"
+              ><span class="icon icon--btn" aria-hidden="true">code</span>Inspect the source</a
+            >
+          </p>
+        </div>
+      </section>
+
+      <section class="section section--muted" aria-labelledby="source-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="source-heading" class="section-heading">
+            <span class="section-heading__index">09</span>
+            Open source
+          </h2>
+          <p>
+            Issues and PRs:
+            <a href="https://github.com/cuongnv126/android-ide-extension" rel="noopener noreferrer">github.com/AndroidGradleTools</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="license-heading" data-reveal>
+        <div class="wrap narrow">
+          <h2 id="license-heading" class="section-heading">
+            <span class="section-heading__index">10</span>
+            License
+          </h2>
+          <p>MIT — see the repository for exact terms.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" data-reveal>
+      <div class="wrap narrow">
+        <div class="footer-brand">
+          <a class="footer-brand__logo" href="#" aria-label="Android Gradle Tools — top of page">
+            <span class="icon icon--footer-logo icon--ad" aria-hidden="true">android</span>
+            <span class="footer-brand__lockup">
+              <span class="footer-brand__name">Android Gradle Tools</span>
+              <span class="footer-brand__tagline">Gradle · Devices · Install — in VS Code</span>
+            </span>
+          </a>
+          <div class="footer-about">
+            <h2 class="footer-about__title" id="footer-about-heading">About</h2>
+            <p class="footer-about__text">
+              Open-source VS Code extension — Gradle, targets, install. Distributed via
+              <a
+                href="https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension"
+                rel="noopener noreferrer"
+                >Marketplace</a
+              >; source on
+              <a href="https://github.com/cuongnv126/android-ide-extension" rel="noopener noreferrer">GitHub</a>.
+            </p>
+          </div>
+        </div>
+        <nav class="footer-meta" aria-label="Official links">
+          <a
+            class="footer-meta__link"
+            href="https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension"
+            rel="noopener noreferrer"
+            >VS Code Marketplace</a
+          >
+          <span class="footer-meta__sep" aria-hidden="true">·</span>
+          <a class="footer-meta__link" href="https://github.com/cuongnv126/android-ide-extension" rel="noopener noreferrer">GitHub</a>
+          <span class="footer-meta__sep" aria-hidden="true">·</span>
+          <a class="footer-meta__link" href="#license-heading">License</a>
+        </nav>
+        <p class="footer-disclaimer" role="note">
+          <span class="footer-disclaimer__label">Disclaimer</span>
+          Not affiliated with Google, the Android Open Source Project, or the Gradle project. Trademarks belong to their respective
+          owners.
+        </p>
+      </div>
+    </footer>
+    <script src="main.js" defer></script>
+  </body>
+</html>

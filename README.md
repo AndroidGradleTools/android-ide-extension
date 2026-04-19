@@ -1,3 +1,5 @@
+> ℹ️ **Public beta** — source code will be available on official release. Questions or issues? [We'd love to hear from you.](https://github.com/cuongnv126/android-ide-extension/issues)
+
 # Android Gradle Tools — Build, Install, Logcat
 
 ![Version](https://img.shields.io/badge/version-0.1.20-blue)
