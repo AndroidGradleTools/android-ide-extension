@@ -2,6 +2,18 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
+## [0.1.35] - 2026-05-07
+
+- **Logcat — adjustable font size.** Overflow menu (⋮) gains a **Font size** row: 11-step scale seekbar (0.5× → 2×) with Scale / Fixed toggle and reset (↺). Persisted across restarts. Layout columns (timestamp, PID, tag) are `em`-based so they scale proportionally.
+- **Panel settings — Logcat section.** New **Logcat** group below **Panel UI** exposes Timestamp format and font size (synced bidirectionally with the overflow menu).
+- **Bug fixes.** Font double-apply on prefs echo-back; `onPrefsChanged` subscription accumulation on sidebar re-resolve; CMD+/- double-scale caused by browser-level zoom firing inside webviews.
+
+## [0.1.34] - 2026-04-26
+
+- **Build card — module picker locked during Install/Compile.** While Gradle is busy, the module breadcrumb is disabled (matching the variant picker). The device pill stays clickable so you can still re-target without canceling the build.
+- **Settings overlay — refreshed group icons.** Each group now uses a glyph distinct from the rest of the panel: **JDK & Gradle home** (coffee), **Build & install** (rocket), **SDK & emulator** (Android robot), **Panel UI** (split-panel dashboard), **Diagnostics** (troubleshoot). Removes overlap with the Compile / device-chip / debugger icons used elsewhere in the panel.
+- **Internet relay — Protocol button opens in-editor.** "Protocol" now opens `docs/remote-adb-bridge-protocol.md` as a Markdown preview tab inside VS Code (previously launched the external default app for `.md`).
+
 ## [0.1.33] - 2026-04-26
 
 - **Repository moved to the [AndroidGradleTools](https://github.com/AndroidGradleTools) GitHub organization.** Source, screenshots, the in-panel **Wireless** guide links, and the in-extension `adb-relay-android` APK download URL all point at the new org. Sibling projects ([adb-relay-jvm](https://github.com/AndroidGradleTools/adb-relay-jvm), [adb-relay-android](https://github.com/AndroidGradleTools/adb-relay-android)) moved together. No code or behavior changes — pure org migration.
@@ -187,7 +199,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 - Initial baseline before marketplace identity changes.
 
+[0.1.34]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.33...v0.1.34
 [0.1.33]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.32...v0.1.33
+[0.1.32]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.31...v0.1.32
+[0.1.31]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.30...v0.1.31
+[0.1.30]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.29...v0.1.30
+[0.1.29]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.28...v0.1.29
+[0.1.28]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.27...v0.1.28
+[0.1.27]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.26...v0.1.27
 [0.1.26]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.25...v0.1.26
 [0.1.25]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.24...v0.1.25
 [0.1.24]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.23...v0.1.24

@@ -1,8 +1,6 @@
-> ℹ️ **Public beta** — source code will be available on official release. Questions or issues? [We'd love to hear from you.](https://github.com/cuongnv126/android-ide-extension/issues)
-
 # Android Gradle Tools — Build, Install, Logcat
 
-![Version](https://img.shields.io/badge/version-0.1.33-blue)
+![Version](https://img.shields.io/badge/version-0.1.35-blue)
 ![Status](https://img.shields.io/badge/status-public%20beta-yellow)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Stack](https://img.shields.io/badge/Android-Gradle%20%7C%20ADB-3ddc84?logo=android&logoColor=white)
@@ -39,7 +37,7 @@ Gradle, devices, and Logcat in a single side panel. Build output is parsed into 
 | **Faster iteration** | Optional **APK cache on compile / install** keeps successful outputs handy for comparison, rollback, and sharing — without leaving the IDE. |
 | **Release signing in-panel** | A **Sign chip** in the Build card switches keystores per build. Generate via `keytool`, save passwords to OS keychain, and auto-inject `signingConfigs` into `build.gradle.kts` or `build.gradle` with diff preview. |
 | **Observable builds** | **Android Build** output ends with a structured summary — result, duration, APK path, and extracted failure reasons — alongside deprecation context and links to Gradle documentation. Discovery and validation route to a separate **System Gradle Log**, leaving the main build stream clean. A **JVM CPU** strip surfaces local Java processes (`jps`) with CPU% and a rolling sparkline while the panel is visible. |
-| **First-class Logcat** | A dedicated Logcat viewer with multi-select **level**, **tag**, and **package** filters — autocomplete is sourced from the live stream, and PIDs are re-resolved in the background so application restarts continue to match. Stack-trace links open `File.kt:42` style references in the editor. Filtered output exports to `.txt`/`.log`, frequent filter combinations save as named **presets**, and shift-click row selection feeds **Copy selected** for sharing slices of the stream. |
+| **First-class Logcat** | A dedicated Logcat viewer with multi-select **level**, **tag**, and **package** filters — autocomplete is sourced from the live stream, and PIDs are re-resolved in the background so application restarts continue to match. Stack-trace links open `File.kt:42` style references in the editor. Filtered output exports to `.txt`/`.log`, frequent filter combinations save as named **presets**, and shift-click row selection feeds **Copy selected** for sharing slices of the stream. Font size is adjustable. |
 | **Wireless Remote ADB** | Debug a remote Android device over the internet (or a VPN/mesh) from VS Code — no cable, no shared Wi-Fi required. The panel shows tabbed setup for **Same Wi-Fi**, **Internet relay**, and **VPN/mesh** modes. In Internet relay mode the IDE downloads and installs **[adb-relay-android](https://github.com/AndroidGradleTools/adb-relay-android)** on the phone directly, and the **[adb-relay-jvm](https://github.com/AndroidGradleTools/adb-relay-jvm)** process acts as the relay host. |
 
 ---
@@ -75,7 +73,7 @@ Gradle, devices, and Logcat in a single side panel. Build output is parsed into 
 
 ### Console and logs
 
-- **Logcat** — `adb logcat` rendered in a webview with multi-select **level**, **tag**, and **package** filters (autocomplete from the live stream; PIDs re-resolve so application restarts continue to match), plus dedicated **Crash** and **Stack trace** category filters and **text / regex** message search with inline regex-error feedback. The workspace's Android `applicationId` is auto-filled as the package filter on open. Stack-trace links open `File.kt:42` style references in the editor. Filtered output **exports** to `.txt` / `.log`; filter combinations save as named **presets** (up to 10). The **Timeline** toggle adds millisecond timestamps, second-boundary separators, and dedups consecutive rows sharing the same tag for cleaner reading. Shift-click row selection with **Copy selected**, plus per-line copy. Open from the panel or **Android: Logcat**.
+- **Logcat** — `adb logcat` rendered in a webview with multi-select **level**, **tag**, and **package** filters (autocomplete from the live stream; PIDs re-resolve so application restarts continue to match), plus dedicated **Crash** and **Stack trace** category filters and **text / regex** message search with inline regex-error feedback. The workspace's Android `applicationId` is auto-filled as the package filter on open. Stack-trace links open `File.kt:42` style references in the editor. Filtered output **exports** to `.txt` / `.log`; filter combinations save as named **presets** (up to 10). The **Timeline** toggle adds millisecond timestamps, second-boundary separators, and dedups consecutive rows sharing the same tag for cleaner reading. Shift-click row selection with **Copy selected**, plus per-line copy. Font size is adjustable. Open from the panel or **Android: Logcat**.
 - **Build output with summary** — every run can end with a structured **BUILD SUMMARY**: result, duration, APK path, and extracted failure reasons.
 - **Full build errors** — use **View Full Errors** on the notification or **Android: Show Full Build Errors** for a read-only tab with compilation errors and Gradle details in context.
 
