@@ -2,6 +2,27 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
+## [0.2.2] - 2026-06-06
+
+- **Logcat crash retention.** Package-filtered Logcat sessions now keep historical PIDs for the selected package, so logs captured before a crash, ANR, or force-stop remain visible after the app process exits.
+- **Logcat export.** Export now considers those historical package PIDs too, preventing post-mortem logs from disappearing when `adb shell pidof <package>` returns empty.
+- **Regression coverage.** Added a test for the crash-path filter case where the active PID set becomes empty but buffered entries from the previous package PID should still match.
+
+## [0.2.1] - 2026-06-06
+
+- **Typing-aware Capybara companion.** Added a pixel-art Capybara above the JVM CPU strip in the Android panel. It reacts to editor typing, terminal activity, cross-window local beacons, and supported AI assistant activity.
+- **AI input hooks.** Optional append-only hooks for Claude Code, Codex, Gemini, Cursor, and Copilot write bounded local activity beacons so the panel companion can react without reading transcript contents.
+- **Capybara controls and layout.** Replaced zoom / text settings controls with hide/show/settings icon buttons, kept the collapsed restore eye compact, centered the Capybara canvas and settings panel independently of the title, and refreshed the mascot art with a cuter Capybara identity.
+- **NPC settings.** Added settings for AI activity detection, tool filtering, automatic hook setup, cross-window beacons, and the optional cheering banner text/mode.
+
+## [0.2.0] - 2026-06-06
+
+- **MCP server for AI assistants.** Local Streamable HTTP server exposes `android_screenshot` and `android_view_hierarchy` against the panel-selected device. The panel keeps the endpoint visible when enabled; older VS Code / Cursor hosts can still use the URL directly.
+- **VS Code native MCP discovery.** Added the required `contributes.mcpServerDefinitionProviders` manifest entry and fixed provider ids for stable vs debug builds. Native discovery now resolves the HTTP definition only after the listener is ready, preventing `fetch failed` races on `127.0.0.1:<port>/mcp`.
+- **MCP auto-registration.** Workspace `.mcp.json` sync now removes stale `android-gradle-tools` entries when MCP is disabled or auto-register is switched off, preserves other servers, and logs write/remove actions to the System output channel.
+- **MCP protocol handling.** Streamable HTTP requests now use a fresh stateless transport per request, so SDK clients can initialize and list tools reliably without sharing a stale transport.
+- **Quality guardrails.** Added tests for the MCP HTTP server, native provider resolution, manifest contribution, UI settings behavior without native discovery, and `.mcp.json` cleanup.
+
 ## [0.1.35] - 2026-05-07
 
 - **Logcat — adjustable font size.** Overflow menu (⋮) gains a **Font size** row: 11-step scale seekbar (0.5× → 2×) with Scale / Fixed toggle and reset (↺). Persisted across restarts. Layout columns (timestamp, PID, tag) are `em`-based so they scale proportionally.
@@ -199,6 +220,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 - Initial baseline before marketplace identity changes.
 
+[0.2.2]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.35...v0.2.0
+[0.1.35]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.34...v0.1.35
 [0.1.34]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.33...v0.1.34
 [0.1.33]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.32...v0.1.33
 [0.1.32]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.31...v0.1.32
