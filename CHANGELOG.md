@@ -2,18 +2,41 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
+## [0.2.7] - 2026-06-07
+
+- **JVM CPU / RAM dock.** Expanded the panel telemetry dock with resident memory totals, per-process RAM chips, and separate CPU / RAM sparklines while keeping the compact hide/show behavior.
+- **Loading and empty-state polish.** Reworked the initial loading skeleton with a smoother transform-based shimmer and replaced the non-Gradle workspace fallback with a centered icon + text empty state.
+- **Release metadata.** Bumped package metadata to 0.2.7.
+- **Regression coverage.** Added guards for the RAM telemetry dock, transform-based shimmer, and non-Gradle empty-state markup.
+
+## [0.2.6] - 2026-06-07
+
+- **Panel cleanup.** Removed the optional mascot/activity feature, including its panel dock, animation assets, editor/terminal activity listeners, local beacons, and AI input hook installer.
+- **Settings cleanup.** Removed the matching configuration keys from the extension manifest and feature catalog.
+- **Regression coverage.** Added a guard that verifies the removed feature no longer appears in the shipped source surfaces.
+
+## [0.2.5] - 2026-06-07
+
+- **Panel visual pass.** Refined theme-dependent panel rendering and repaint behavior.
+
+## [0.2.4] - 2026-06-07
+
+- **Android panel visual polish.** Refined the main panel for a more modern minimal look in light and dark themes: softer section surfaces, lower-contrast borders, fixed-size Build actions, and a darker settings sheet that stays readable above the panel.
+- **Gradle command UX.** Busy rows now show cleaner resolved Gradle labels, keep elapsed time aligned near **Cancel**, optimistically disable running actions, and treat Gradle build failures as user-facing errors instead of extension crashes. Cancel also stops the matching Gradle daemons.
+- **JVM CPU dock polish.** Reworked the CPU strip into a compact telemetry section with process count, total CPU, lighter chips, a sparkline, and a hide/show control. When hidden, polling stops until the dock is shown again.
+- **Regression coverage.** Added tests covering the refreshed panel surface, Gradle busy state, CPU telemetry dock, and safer Gradle runner behavior.
+
+## [0.2.3] - 2026-06-07
+
+- **README polish.** Reworked the README into a tighter hybrid of Marketplace pitch and technical reference: clearer hero copy, grouped workflow sections, command / settings tables, and less repeated feature text.
+- **Easier setup messaging.** Highlighted the visual panel settings sheet as the main configuration path for JDK, Android SDK, Gradle daemon cleanup, MCP, Remote ADB, and panel polish.
+- **Release metadata.** Bumped package metadata to 0.2.3 and kept the feature catalog aligned with the release version.
+
 ## [0.2.2] - 2026-06-06
 
 - **Logcat crash retention.** Package-filtered Logcat sessions now keep historical PIDs for the selected package, so logs captured before a crash, ANR, or force-stop remain visible after the app process exits.
 - **Logcat export.** Export now considers those historical package PIDs too, preventing post-mortem logs from disappearing when `adb shell pidof <package>` returns empty.
 - **Regression coverage.** Added a test for the crash-path filter case where the active PID set becomes empty but buffered entries from the previous package PID should still match.
-
-## [0.2.1] - 2026-06-06
-
-- **Typing-aware Capybara companion.** Added a pixel-art Capybara above the JVM CPU strip in the Android panel. It reacts to editor typing, terminal activity, cross-window local beacons, and supported AI assistant activity.
-- **AI input hooks.** Optional append-only hooks for Claude Code, Codex, Gemini, Cursor, and Copilot write bounded local activity beacons so the panel companion can react without reading transcript contents.
-- **Capybara controls and layout.** Replaced zoom / text settings controls with hide/show/settings icon buttons, kept the collapsed restore eye compact, centered the Capybara canvas and settings panel independently of the title, and refreshed the mascot art with a cuter Capybara identity.
-- **NPC settings.** Added settings for AI activity detection, tool filtering, automatic hook setup, cross-window beacons, and the optional cheering banner text/mode.
 
 ## [0.2.0] - 2026-06-06
 
@@ -220,6 +243,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 - Initial baseline before marketplace identity changes.
 
+[0.2.5]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/AndroidGradleTools/android-ide-extension/compare/v0.1.35...v0.2.0
