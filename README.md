@@ -1,6 +1,6 @@
 # Android Gradle Tools — Build, ADB, Logcat & AI
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Version](https://img.shields.io/badge/version-1.2.0-blue)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Stack](https://img.shields.io/badge/Android-Gradle%20%7C%20ADB-3ddc84?logo=android&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS%20Code-1.85.0+-purple)
@@ -15,7 +15,7 @@ Install directly from a terminal:
 code --install-extension AndroidGradleTools.android-ide-extension
 ```
 
-![Android Gradle Tools: Gradle side panel with multi-root projects, device target, build actions, variant selection, Logcat with filters, and Android Build output](https://raw.githubusercontent.com/AndroidGradleTools/android-ide-extension/main/media/screenshots/overview.webp)
+![Android Gradle Tools in VS Code: a multi-root Gradle project installing an app, with Logcat and build output visible](https://raw.githubusercontent.com/AndroidGradleTools/android-ide-extension/main/media/screenshots/overview.webp)
 
 ---
 
@@ -57,9 +57,9 @@ It also coexists cleanly with Android Studio. By default, extension builds use a
 
 ### Devices and variants
 
-- Switch physical devices and emulators from the Build card or status bar.
+- Switch physical devices and emulators from the run widget's deployment target or the status bar.
 - Auto-select a sensible target when devices connect, reconnect, or disappear.
-- Discover variants from Gradle and cache them per module with validation that avoids surprise background Gradle runs.
+- Sync finds modules and build variants from Gradle, like Android Studio, and runs once by itself the first time a project opens (turn that off with `syncOnFirstOpen`). Until then, Run builds the default install task, shown as "debug · default".
 - Reuse variant discovery results when Gradle inputs are unchanged, including when the same project is reopened under a different VS Code workspace identity.
 - Keep multi-root workspaces explicit with a dedicated Gradle root picker.
 
@@ -75,7 +75,7 @@ It also coexists cleanly with Android Studio. By default, extension builds use a
 
 ### Release, debug, and remote workflows
 
-- Set up release signing from the panel: pick or generate a keystore, detect aliases, store passwords in VS Code SecretStorage, and inject `signingConfigs` into Gradle files with a diff preview.
+- Set up release signing from the panel: pick or generate a keystore, detect aliases, store passwords in VS Code SecretStorage, and inject `signingConfigs` into Gradle files with a diff preview. If your build already signs releases its own way, choose **Don't show again** on the signing notice.
 - Attach the Android JDWP debugger to a running Java / Kotlin process through local `adb` port forwarding.
 - Use Wireless Remote ADB over same Wi-Fi, VPN / mesh, or an internet relay backed by [`adb-relay-android`](https://github.com/AndroidGradleTools/adb-relay-android) and [`adb-relay-jvm`](https://github.com/AndroidGradleTools/adb-relay-jvm).
 
@@ -85,22 +85,24 @@ It also coexists cleanly with Android Studio. By default, extension builds use a
 - List and search Google-maintained official Android skills without changing the environment; initialize or update them only after an explicit click and modal confirmation.
 - Export diagnostics as stable schema-v1 JSON, including whether the extension host is local or remote.
 - Run **Android: Create Agent Context Bundle** to collect bounded, redacted diagnostics, focused build errors, Logcat, a selected-device screenshot, and structured UI layout evidence into extension storage. The command opens `context.md` for review and never uploads or invokes a model.
-- Use the **Lab** action in the Android panel’s Build toolbar—or run **Android: Inspect AppFunctions (Experimental)**—to open an auto-running AppFunctions inspector. It keeps compile SDK, Jetpack/KSP setup, service metadata, KDoc coverage, device recovery, and structured identifiers, descriptions, parameters, and response schemas together in the panel; it never builds, installs, enables, disables, or executes a function.
+- Open **AppFunctions Lab** from the panel's Tool windows, or run **Android: Inspect AppFunctions (Experimental)**, to inspect AppFunctions readiness. It keeps compile SDK, Jetpack/KSP setup, service metadata, KDoc coverage, device recovery, and structured identifiers, descriptions, parameters, and response schemas together in the panel; it never builds, installs, enables, disables, or executes a function.
 - Keep official Android skills separate from the four extension-owned skills below. Official skills are managed by Android CLI; extension skills are symlinked into detected agent folders by this extension.
-- Link bundled extension skills into detected Codex, Claude, Copilot, Gemini, and Cursor home folders from panel settings.
+- Link bundled extension skills into detected Codex, Claude, Copilot, Gemini, and Cursor home folders from the AI Toolchain page's agent-by-skill grid.
 - Use `android-screen-inspector`, `android-build-triage`, `android-logcat-debugger`, and `android-device-lab` for adb-first screen reads, build failure diagnosis, runtime log analysis, and device / emulator verification.
-- Keep the extension as the source of truth: enabled agents receive extension-owned symlinks, disabling removes only those symlinks, and provider rows stay hidden until the matching agent folder exists.
+- Keep the extension as the source of truth: enabled agents receive extension-owned symlinks, disabling removes only those symlinks, and agents stay dimmed in the grid until the matching agent folder exists.
 - Replace broken or third-party skill symlinks only after an explicit confirmation, while preserving real user-owned files.
-- Discover AI Toolchain settings from a dismissible panel banner above the CPU / RAM dock; dismissals stay quiet for 7 days unless a new agent folder appears.
+- Discover the AI Toolchain from a one-line tip under the run widget; dismissals stay quiet for 7 days unless a new agent folder appears.
 
 ### Panel polish
 
-- Keep the main Android panel available outside Gradle projects: device, wireless ADB, Logcat, system logs, settings, and AI Toolchain remain active while project-only actions are clearly disabled.
-- Configure the extension from a visual panel settings sheet tuned for the easiest possible setup, with a readable dark surface above the panel instead of hand-editing JSON for common workflows.
-- Use a shared Material 3 / JetBrains-style visual language across the Android panel, Logcat, APK cache, settings sheet, wireless guide, menus, and popovers.
-- Track local JVM CPU and RAM with a compact telemetry dock powered by `jps`, including process count, total CPU / memory, separate sparklines, and a hide/show control.
+- Run, build, sync and attach from an Android Studio–style run widget: module | variant, deployment target, then ▶ Run 'app', which becomes ■ Stop with a timer while Gradle runs.
+- Open Logcat, Build output and System log from the tool windows docked at the bottom of the panel, and APK builds, Signing, AppFunctions Lab and AI Toolchain from Other tools, each with live details such as the last build result.
+- Keep the main Android panel available outside Gradle projects: device, wireless ADB, Logcat, system logs, settings, and AI Toolchain remain active while project-only actions say "Needs Gradle".
+- Configure the extension from a searchable Settings page grouped like Android Studio's settings, with value summaries, modified markers and per-setting Reset.
+- Open Settings, Release signing, Pair Devices Using Wi‑Fi, AppFunctions Lab and AI Toolchain as full-panel pages with Back, breadcrumbs and Esc.
+- Turn on the optional Android Studio keymap (`keymap` setting) for ⌃R Run, ⌘F9 Build, ⌘F2 Stop and ⌘6 Logcat (Shift+F10, Ctrl+F9, Ctrl+F2 and Alt+6 on Windows and Linux).
+- Watch Gradle and Kotlin JVMs from the status strip meter, which opens CPU and RAM sparklines, process chips and Stop Gradle Daemons.
 - Show the active device in the status bar.
-- Use a polished Build surface with stable action-button sizing, softer section borders, smoother loading skeletons, clearer Gradle busy labels, and elapsed time aligned next to **Cancel**.
 - Submit crash reports only after reviewing a sanitized payload in the browser; nothing is sent automatically.
 
 ## Get started
@@ -108,9 +110,9 @@ It also coexists cleanly with Android Studio. By default, extension builds use a
 1. Open the **Android** side panel from the activity bar, or run **Android: Open side panel**. A Gradle project is optional for device, Logcat, wireless ADB, system log, settings, and AI Toolchain workflows.
 2. For build workflows, open a standard Android Gradle project with `gradlew` or `gradlew.bat`.
 3. Pick a Gradle root, module / variant, and device.
-4. Click **Install**, **Compile**, **Clean**, or **Sync Gradle**.
+4. Click **▶ Run 'app'** to build, install and launch, or use Build, Sync and ⋮ More (Clean Project) in the run widget.
 5. Open **Logcat** from the panel or run **Android: Logcat**; use `-TagName` to suppress noisy tags.
-6. Optional: open **AI Toolchain** in panel settings to check Android CLI and manage official or extension-owned Android skills.
+6. Optional: open **AI Toolchain** from Tool windows to check Android CLI and manage official or extension-owned Android skills.
 
 If setup behaves strangely, run **Android: Run Diagnostics** and open **Android: Show System Gradle Log** to inspect the generated preflight report. Use **Android: Export Diagnostics as JSON** for a structured report, or **Android: Create Agent Context Bundle** when another developer or agent needs reviewable local evidence.
 
@@ -129,6 +131,7 @@ If setup behaves strangely, run **Android: Run Diagnostics** and open **Android:
 |---|---|
 | **Android: Open side panel** | Open the main Android workflow surface |
 | **Android: Build Project** / **Android: Build and Install** | Compile or install the selected target |
+| **Android: Stop Gradle Task** | Cancel the running panel build, install, clean or sync |
 | **Android: Clean Project** / **Android: Sync Gradle project** | Run common Gradle maintenance flows |
 | **Android: Build Variants** / **Android: Pick Gradle module** / **Android: Pick Gradle root** | Control active Gradle context |
 | **Android: Select Device** | Pick a device or emulator |
@@ -145,17 +148,18 @@ If setup behaves strangely, run **Android: Run Diagnostics** and open **Android:
 
 ## Settings
 
-Most setup happens from the Android panel gear. The settings UI is tuned to make configuration as easy as possible: choose a JDK, point to an Android SDK, tune Gradle daemon cleanup, manage the AI Toolchain, configure Remote ADB, and adjust panel polish without leaving the workflow.
+Most setup happens from the Android panel gear, which opens a searchable Settings page grouped like Android Studio's: choose a Gradle JDK, point to an Android SDK, tune Gradle daemon cleanup, switch to the Android Studio keymap, and reach Release signing, Wi‑Fi pairing and the AI Toolchain from the same tree.
 
 You can also search **Android Gradle Tools** in VS Code Settings when you prefer the full settings view.
 
 | Area | Key settings |
 |---|---|
-| Gradle tasks | `installTask`, `buildTask`, `defaultGradleModule`, `gradleExtraArgs` |
+| Gradle tasks | `installTask`, `buildTask`, `defaultGradleModule`, `gradleExtraArgs`, `syncOnFirstOpen` |
 | Gradle runtime | `gradleRunner`, `gradleJavaHome`, `buildOutputChannel` |
 | Daemon hygiene | `gradleIsolateUserHome`, `gradleUserHome`, `gradleDaemonIdleStopMinutes`, `stopGradleDaemonsOnDeactivate` |
 | Android SDK / device | `androidSdkPath`, `emulatorLaunchArgs`, `showStatusBarDevice` |
 | Post-install launch | `launchAppAfterInstall`, `launchApplicationId` |
+| Keyboard | `keymap` |
 | Wireless Remote ADB | `remoteAdbRelayUrl`, `remoteAdbListenHost`, `remoteAdbLocalPort` |
 | AI Toolchain | `androidCliPath` |
 | Privacy | `crashReportEnabled` |
@@ -196,17 +200,16 @@ Agent Context Bundles are also local. They are written under the extension's glo
 
 ## Release notes
 
-### 1.1.0 - 2026-09-18
+### 1.2.0 - 2026-09-28
 
-- Kept the Android panel and standalone device workflows available without a Gradle project, including device selection, wireless ADB, Logcat, system logs, settings, and AI Toolchain; project-only actions remain visibly unavailable.
-- Added negative Logcat tag filtering with `-Tag` tokens. Exclusions are case-insensitive, win over positive matches, and round-trip through existing presets.
-- Expanded the experimental AppFunctions Lab with structured function identifiers, descriptions, parameters, referenced schemas, and response types while retaining bounded raw JSON as the authoritative fallback.
+- Reworked the Android panel around a Studio-style run widget, bottom tool windows, a Gradle status strip, and focused notices. Build, Sync, Run, debugger attachment, Logcat, signing, and AI tools stay within the panel.
+- Sync now refreshes modules and build variants, runs once when a project first opens by default, and shows a Retry notice if it fails. Run uses the selected variant, including flavored builds.
+- Moved Settings, Release signing, wireless pairing, AppFunctions Lab, and AI Toolchain into full-panel pages. Settings now support search, modified markers, and per-setting Reset.
+- Added Stop while a Gradle job runs, an optional Android Studio keymap, and a project-level way to dismiss release signing checks when Gradle already handles them.
 
-### 1.0.1 - 2026-08-28
+### 1.1.1 - 2026-09-18
 
-- Added the experimental **AppFunctions Lab** as a compact **Lab** action in the existing Build toolbar and as **Android: Inspect AppFunctions (Experimental)** in the Command Palette.
-- Added an auto-running full-panel inspector for compile SDK 36+, Jetpack/KSP dependencies, service entry points, manifest metadata, KDoc coverage, project context, selected-device recovery, and registered metadata.
-- Kept device discovery read-only and pinned to the explicitly selected serial. It skips missing or offline targets and never builds, installs, launches an AVD, changes function state, or executes a function.
-- Bounded metadata again after JSON formatting and prevented nested local `.worktrees/` content from entering production VSIX packages.
+- Fixed the experimental AppFunctions Lab full-panel inspector so its opaque surface cleanly covers the normal Gradle panel instead of letting controls, the AI Agents banner, and JVM telemetry show through and overlap its content.
+- Added regression coverage that keeps the Lab overlay bound to the shared panel background token.
 
 [Full changelog](CHANGELOG.md)

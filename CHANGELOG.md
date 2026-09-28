@@ -2,12 +2,122 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
+## [Unreleased]
+
+## [1.2.0] - 2026-09-28
+
+- **Android Studio–style panel.** The Android panel now follows Android Studio's layout: a raised run widget (module | variant, deployment target, a green ▶ Run 'app', then Build, Sync, Attach Debugger and More with coloured icons; menus stay closed while Gradle runs), tool windows docked at the bottom with live details (Logcat, Build output and System log, then Other tools: APK builds, Signing, AppFunctions Lab and AI Toolchain), and a status strip with the Gradle state and a JVM meter. Notices appear only when something needs action. The healthy-state banner, section cards, tile grid, footer and CPU/RAM dock are gone.
+- **Sync finds your variants.** Sync now refreshes the modules and build variants with the same Gradle commands and cache Discover Variants used, and it runs once by itself the first time a project opens (`android-ide-extension.syncOnFirstOpen`, on by default). A project with flavors gets a real variant, such as demoDebug, instead of an ambiguous `installDebug`. Clicking the variant with nothing cached syncs and opens Build Variants without a dialog. Before any Sync the variant reads "debug · default", and a failed Sync shows one notice with Retry. Discover Variants left the ⋮ menu and the Command Palette, and Clear Variant is now Use Default Variant.
+- **Release signing notice: Don't show again.** Projects that sign release builds themselves can turn the release signing checks off for that project. Undo is one click away, and the Release signing page can turn them back on.
+- **Settings that can't be saved say why.** If VS Code refuses a change from the Settings page or the keymap tip, you see the reason (with Reload Window when the window needs a reload after an update) instead of a value that silently reverts.
+- **Stop and Stop Gradle Task.** While a build or install runs, Run turns into Stop with a timer. The new **Android: Stop Gradle Task** command cancels the running panel job.
+- **Pages instead of sheets.** Settings, Release signing, Pair Devices Using Wi‑Fi, AppFunctions Lab and the new AI Toolchain page open as full-panel pages with Back, breadcrumbs and Esc, instead of sheets over a dimmed panel.
+- **Studio-style Settings.** Settings are grouped like Android Studio's (Appearance & Behavior; Build, Execution, Deployment; Languages & Frameworks; Tools), with search, value summaries, modified markers and per-setting Reset. Changes still apply immediately.
+- **Release signing labels.** The signing page uses Android Studio's New Key Store labels, a collapsible Gradle changes preview and a footer with Save & configure.
+- **AI Toolchain page.** The Android CLI, official skills and an agent-by-skill grid for the extension skills have their own page. Agents without a skills folder stay visible, dimmed.
+- **Optional Android Studio keymap.** Set `android-ide-extension.keymap` to `androidStudio`, or accept the one-time tip that lists the keys, for ⌃R Run, ⌘F9 Build, ⌘F2 Stop and ⌘6 Logcat (Shift+F10, Ctrl+F9, Ctrl+F2 and Alt+6 on Windows and Linux). Stop only takes ⌘F2 / Ctrl+F2 while a Gradle job runs.
+- **Debugger controls.** The panel's step, pause, breakpoint, mute and evaluate buttons are removed; VS Code's debug toolbar and Run and Debug view provide them. The panel keeps a "Debugger attached" row with Detach.
+- **View title.** Only Settings stays inline in the Gradle view title. The other actions moved to its ⋯ menu, and Sync lives in the run widget and the Command Palette.
+- **Device picker wording.** The picker groups Running devices and Virtual devices and ends with Pair Devices Using Wi‑Fi….
+- **Release metadata.** Bumped the package, lockfile, feature catalog, README badge, and release notes to 1.2.0.
+
+## [1.1.1] - 2026-09-18
+
+- **AppFunctions Lab layout.** Restored the full-panel inspector's opaque background so the normal Gradle controls, AI Agents banner, and JVM telemetry no longer show through or overlap its content.
+- **Regression coverage.** Added a guard that keeps the Lab overlay connected to a defined shared panel background token.
+- **Release metadata.** Bumped the package, lockfile, feature catalog, README badge, and release notes to 1.1.1.
+
+## [1.1.0] - 2026-09-18
+
+- **Structured AppFunctions metadata.** The experimental Lab now presents selected-app function identifiers, descriptions, parameters, referenced component schemas, and response types from real Android 16 `list-app-functions` output while retaining bounded raw JSON as the fallback and authority.
+- **Standalone Android tools.** The main panel now remains useful without a Gradle project: device selection, wireless ADB, Logcat, system logs, settings, and AI Toolchain stay available while project-only controls are visibly disabled with a direct open/add-folder action.
+- **Negative Logcat tag filters.** Prefix tag chips with `-` to exclude noisy tags, including mixed include/exclude filters and preset round-tripping.
+- **Release metadata.** Bumped the package, lockfile, feature catalog, README badge, and release notes to 1.1.0.
+
+## [1.0.1] - 2026-08-28
+
+- **AppFunctions Lab foundation.** Added a compact **Lab** action to the existing Build toolbar and **Android: Inspect AppFunctions (Experimental)**. Both open an auto-running, full-panel inspector that keeps readiness checks, selected-device recovery, and registered metadata inline instead of opening a Markdown report or occupying permanent card space.
+- **Read-only rollout.** The first lab slice never builds, installs, launches an AVD, changes function state, or executes a function. Execution remains deferred until descriptions, JSON parameters, and destructive-action confirmations can be reviewed explicitly.
+- **Bounded device metadata.** Re-applied the 1 MiB limit after JSON pretty formatting so compact device output cannot expand into an oversized panel payload.
+- **Reliable release packaging.** Excluded nested `.worktrees/` directories from VSIX contents and added a regression assertion for the publisher ignore rule.
+- **Release metadata.** Bumped the package, lockfile, feature catalog, README badge, and release notes to 1.0.1.
+
+## [1.0.0] - 2026-08-28
+
+- **AI Toolchain.** Renamed the AI settings surface and added optional Android CLI status, official skill list/search, documentation, and explicit initialize/update actions. Skill mutations require the exact modal confirmation; settings load, probe, list, and search remain read-only.
+- **Diagnostics JSON.** Added **Android: Export Diagnostics as JSON** with a stable schema-v1 document, Android CLI readiness, and local/Remote-SSH extension-host context while preserving the existing text report.
+- **Agent Context Bundle.** Added **Android: Create Agent Context Bundle** as a lazy-loaded workflow that writes diagnostics, focused build errors, bounded Logcat, an explicit selected-device screenshot, and structured UIAutomator layout evidence to extension storage, then opens `context.md` for review.
+- **Partial-failure evidence.** Every optional bundle artifact records captured, skipped, or failed state, so missing Android CLI, no selected device, stopped/unauthorized devices, and individual collector failures do not prevent the required manifest and review document.
+- **Privacy and explicit action.** Added deterministic redaction for common secret assignments/query values, UTF-8-safe text limits, image/hierarchy/total size caps, unique UIAutomator paths with cleanup, no automatic clipboard/upload/model action, and user-selected copy/reveal actions only.
+- **Remote-workspace clarity.** Declared workspace extension placement, rejected virtual workspaces that cannot provide Android tooling access, and exposed execution location in diagnostics and bundles.
+- **Conservative Android CLI device capture.** The adapter supports `ANDROID_SERIAL`-scoped layout/annotated capture, but those optional artifacts remain disabled until two-device targeting is manually verified; trusted `screen.png` always uses explicit `adb -s <selected-serial>`.
+- **Marketplace discovery.** Updated the display name to **Android Gradle Tools — Build, ADB, Logcat & AI**, retained build/install discovery terms, replaced generic duplicate tags with Android CLI and agent keywords, moved to the accurate Debuggers/Other categories, and added direct installation, search-intent FAQ content, and a non-interruptive review/support link to the README.
+- **Release metadata.** Promoted the extension to 1.0.0, removed the public-beta README treatment, and aligned the package, lockfile, feature catalog, README badge, and Marketplace-facing copy.
+
+## [0.3.1] - 2026-06-17
+
+- **Stable AI skill links.** Bundled Android skills are copied into extension-managed storage and agent home folders now symlink to that stable location instead of the versioned extension package directory.
+- **Extension-update migration.** Legacy extension-owned skill symlinks that point at old package resources are migrated automatically, while ordinary files/directories and unknown symlink targets remain protected.
+- **ADB-only screen inspection.** `android-screen-inspector` no longer ships or requires a Node helper script; its workflow now documents direct `adb` screenshot and UIAutomator hierarchy commands.
+- **Regression coverage.** Added guards for stable skill links across extension updates and for keeping the screen-inspector skill free of Node / `.cjs` script dependencies.
+- **Release metadata.** Bumped package metadata to 0.3.1 and aligned README release notes and feature catalog metadata.
+
+## [0.3.0] - 2026-06-13
+
+- **Android diagnostics preflight.** Added **Android: Run Diagnostics**, a read-only command that writes a one-shot setup report to the Android System output channel.
+- **Setup report coverage.** Diagnostics now summarize detected Gradle roots, active root, Gradle wrapper state, active module / variant, cached variants, SDK root, adb / emulator / aapt resolution, JAVA_HOME, GRADLE_USER_HOME, selected target, ADB devices, and AVDs.
+- **Command surfacing.** Exposed the diagnostics command through activation events, the Command Palette, and the Android panel title actions next to the System Gradle Log.
+- **Read-only guardrails.** The diagnostics service avoids Gradle execution, APK install paths, file writes, and directory creation while still reporting missing or deferred environment state.
+- **Regression coverage.** Added guards for diagnostics command wiring, deterministic report formatting, output-channel usage, and read-only service shape.
+- **Release metadata.** Bumped package metadata to 0.3.0 and aligned README release notes and feature catalog metadata.
+
+## [0.2.12] - 2026-06-12
+
+- **Logcat safety and control.** Opening or restarting Logcat no longer clears the device-wide log buffer by default. A separate **Clear device buffer...** action in the overflow menu now confirms before running `adb logcat -c`, while the toolbar clear button remains local to the viewer.
+- **ADB reliability.** Key ADB and tool subprocess paths now use explicit timeouts and cancellation handling so bad device / server states are less likely to leave extension flows hanging indefinitely.
+- **Variant discovery caching.** Gradle assemble variant discovery is fingerprinted per module and reused when relevant Gradle files are unchanged. Discovery cache also survives reopening the same project under a different VS Code workspace identity, while the selected variant stays workspace-local.
+- **Performance fixes.** APK cache copies now stream through `workspace.fs.copy()` instead of buffering entire APK payloads in extension-host memory. JDWP source lookup avoids synchronous recursive workspace scans and uses bounded, cached async search.
+- **Background work gating.** Device polling now starts only after an Android Gradle project context is confirmed, reducing startup work in unrelated workspaces.
+- **Regression coverage.** Added guards for non-destructive Logcat startup, explicit device-buffer clearing, exec timeout / cancellation behavior, APK copy memory usage, variant cache reuse, cross-workspace variant-cache restore, async debug source lookup, and Android-only device polling.
+
+## [0.2.11] - 2026-06-08
+
+- **Unified panel visual language.** Brought the Android side panel, panel settings, Wireless Remote ADB guide, Logcat toolbar / menus, APK cache menus, inputs, popovers, and active states onto shared Material 3 / JetBrains-style surface tokens.
+- **AI Agents symlink replacement.** Broken or third-party symlinks can now be replaced only after an explicit confirmation, while real user-owned files are still preserved.
+- **Quieter AI Agents banner.** The banner now hides once every detected agent has all bundled Android skills linked, and panel state refreshes immediately after skill-link changes.
+- **UI / UX contract.** Expanded the project rules with the Android panel visual-language contract so future panel, toolbar, menu, row, empty-state, and popover work has one source of truth.
+- **Release metadata.** Kept the release manifest identity, README badge, lockfile, and feature catalog aligned for 0.2.11.
+- **Regression coverage.** Added guards for all-detected-agent skill linking, symlink replacement behavior, panel-state refresh, and the updated AI Agents settings markup.
+
+## [0.2.10] - 2026-06-08
+
+- **Bundled Android AI skills.** Added `android-build-triage`, `android-logcat-debugger`, and `android-device-lab` alongside the existing read-only `android-screen-inspector` skill.
+- **Broader AI Agents support.** The panel can link bundled skills into detected Codex, Claude, Copilot, Gemini, and Cursor home folders with extension-owned symlinks.
+- **AI Agents discovery banner.** Added a banner above the CPU / RAM dock that opens the AI Agents settings section, can collapse, and stays dismissed for 7 days unless a new agent folder appears.
+- **Cleaner AI Agents settings.** Reworked provider toggles into compact chips, hides unavailable providers, separates each skill into a readable section, and shows only actionable per-skill issue messages.
+- **Release docs alignment.** Updated README release notes and feature catalog metadata for the 0.2.10 release.
+
+## [0.2.9] - 2026-06-07
+
+- **Marketplace discovery metadata.** Refined the manifest description and keyword set for Android search intent while keeping the public name aligned with the `androidgradletools.org` domain and `Android Gradle Tools` brand.
+- **Android search coverage.** Added focused Android terms for Gradle, ADB, Logcat, APK, emulator, deploy, and debugger workflows within the Marketplace 30-keyword limit.
+- **Release docs alignment.** Updated README release notes, version badge, and feature catalog metadata for the 0.2.9 release.
+
+## [0.2.8] - 2026-06-07
+
+- **Marketplace search pass.** Updated the extension description to lead with Android / VS Code / Cursor intent while keeping the `Android Gradle Tools` brand aligned with `androidgradletools.org`.
+- **Keyword coverage.** Filled the Marketplace keyword list to the 30-keyword limit with focused Android terms for Gradle, ADB, Logcat, APK install, emulator, deploy, and debugger workflows.
+- **Feature catalog sync.** Mirrored the marketplace-facing description in `features.yaml` so landing page and README generation inputs stay aligned.
+
 ## [0.2.7] - 2026-06-07
 
+- **AI agent screen inspector skill.** Added a bundled read-only `android-screen-inspector` skill with an adb-first script that captures screenshots and UIAutomator hierarchy data without running a local server.
+- **AI Agents settings.** Added a skill-first **AI Agents** settings section where each skill lists provider toggles for Claude and Codex. Enabling a provider creates an extension-owned symlink into the detected agent home; disabling removes only that symlink and preserves user files/conflicts.
+- **MCP removal.** Removed the MCP server contribution, settings, auto-registration flow, source modules, bundle entry, and dependency in favor of the standalone skill path.
 - **JVM CPU / RAM dock.** Expanded the panel telemetry dock with resident memory totals, per-process RAM chips, and separate CPU / RAM sparklines while keeping the compact hide/show behavior.
 - **Loading and empty-state polish.** Reworked the initial loading skeleton with a smoother transform-based shimmer and replaced the non-Gradle workspace fallback with a centered icon + text empty state.
 - **Release metadata.** Bumped package metadata to 0.2.7.
-- **Regression coverage.** Added guards for the RAM telemetry dock, transform-based shimmer, and non-Gradle empty-state markup.
+- **Regression coverage.** Added guards for the AI agent skill linker, MCP removal, RAM telemetry dock, transform-based shimmer, and non-Gradle empty-state markup.
 
 ## [0.2.6] - 2026-06-07
 
