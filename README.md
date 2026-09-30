@@ -1,215 +1,114 @@
-# Android Gradle Tools — Build, ADB, Logcat & AI
+# Android Gradle Tools for VS Code
 
-![Version](https://img.shields.io/badge/version-1.2.0-blue)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-![Stack](https://img.shields.io/badge/Android-Gradle%20%7C%20ADB-3ddc84?logo=android&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS%20Code-1.85.0+-purple)
+**Build, run, and debug Android apps in VS Code — no Android Studio required.** Open an existing Android Gradle project, choose a module, variant, and device, then press **Run**. The extension builds with your project's Gradle Wrapper, installs through ADB, and launches the app. Filter Logcat, jump from stack traces to source, and attach the built-in JDWP debugger to a debuggable Kotlin or Java app.
 
-**Android development in VS Code and Cursor.** Build, install, debug, and inspect Android apps with Gradle, ADB, Logcat, emulators, diagnostics, and AI agent tools. Android Gradle Tools brings device targeting, APK caching, build variants, JDWP attach debugging, release signing, and an AI-ready Android toolchain into one editor surface—without juggling `./gradlew`, `adb`, `logcat`, and terminal tabs.
+Works with both `build.gradle` and `build.gradle.kts`. This extension does not provide Kotlin editing; install a Kotlin language extension for highlighting and completion. Android Gradle Tools is an independent, open-source project under the [MIT license](LICENSE).
 
-**[Install from the Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension)** or search **Android Gradle Tools** in the Extensions view.
+[**Install from the Visual Studio Marketplace**](https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension) · [Source code](https://github.com/AndroidGradleTools/android-ide-extension) · [Changelog](CHANGELOG.md)
 
-Install directly from a terminal:
+![Android Gradle Tools in VS Code: an Android run panel beside Logcat and Gradle output](https://raw.githubusercontent.com/AndroidGradleTools/android-ide-extension/main/media/screenshots/overview.webp)
 
-```bash
-code --install-extension AndroidGradleTools.android-ide-extension
-```
+*An `app` debug run in progress, with the selected emulator, Logcat, and Gradle output visible.*
 
-![Android Gradle Tools in VS Code: a multi-root Gradle project installing an app, with Logcat and build output visible](https://raw.githubusercontent.com/AndroidGradleTools/android-ide-extension/main/media/screenshots/overview.webp)
+## Get running in three steps
 
----
+**Before the first sync:** The extension uses a separate Gradle home by default. The first build may download dependencies again, and Gradle will not read settings in your usual `~/.gradle`, including proxy settings, private repository credentials, and init scripts. If your build needs them, turn off `android-ide-extension.gradleIsolateUserHome` in VS Code Settings before opening the Android panel. [Details](#why-does-my-build-behave-differently-from-android-studio-or-the-terminal)
 
-## Android workflows covered
+1. **Open your project.** Open an existing Android Gradle project that includes `gradlew` or `gradlew.bat`. Have the Android SDK and a JDK supported by your project's Android Gradle Plugin installed.
+2. **Open the Android panel.** Select the Android icon in the activity bar. The first sync discovers Gradle modules and build variants by default. Choose the Gradle root, module, variant, and a connected device or Android Virtual Device (AVD).
+3. **Run.** Click **Run** to build, install, and launch the selected app. Use **Build output** for Gradle results and **Logcat** for device logs.
 
-- Android Gradle build, install, deploy, clean, and sync from VS Code or Cursor.
-- ADB device targeting for physical Android devices, wireless ADB, remote ADB, and Android Emulator / AVD workflows.
-- Android Logcat filtering by package, tag, level, crash, stack trace, text, and regex, with local clear separate from confirmed device-buffer clearing.
-- APK cache browsing, reinstall, rollback, comparison, and sharing for successful Android builds.
-- Android build variants, Gradle modules, multi-root workspaces, release signing, and JDWP attach debugging.
-- An AI Toolchain for optional official Android CLI skills, structured diagnostics, local reviewable context bundles, and extension-owned Android development skills.
+If setup fails, run **Android: Run Diagnostics** from the Command Palette to check the Gradle project, JDK, SDK, ADB, device, and variant. Set the SDK path or Gradle JDK from the Android panel settings when automatic detection misses them.
 
----
+## Build and run Android apps in VS Code
 
-## Why use it?
+- Build, sync, run, stop, and clean from the Android panel. Select Gradle-discovered variants, including product flavors, and the right root in a multi-root workspace.
+- Run on a connected device or emulator. If the selected AVD is stopped, the extension can boot it while Gradle builds the app.
+- See the build result, duration, APK path, and extracted failure reasons; open the full Gradle output for details. Use **Android: Stop Gradle Task** to cancel a running task.
+- Browse cached APK builds, reinstall an earlier APK, or reveal its file for manual comparison or sharing.
+- Set up release signing with a keystore picker or generator. Review a proposed Gradle file change before applying it. When you choose VS Code SecretStorage for passwords, the extension passes them to its Gradle process; terminal and CI builds need their own credentials.
 
-Android Gradle Tools sits between terminal-only Android development and a full Android Studio session: light enough to stay inside VS Code, structured enough for real Android Gradle / ADB / Logcat iteration, and carefully tuned so routine Android app workflows stay obvious.
+## Logcat and ADB in VS Code
 
-| Workflow need | Android Gradle Tools | Manual terminal loop |
-|---|---|---|
-| Build / install | Pick Android Gradle root, module, variant, and device in one panel | Re-type Gradle tasks, `adb` serials, and `cd` paths |
-| Device targeting | Live Android device / emulator picker with auto-selection | `adb devices`, emulator checks, serial flags |
-| Logcat | Integrated Android Logcat filters, presets, exports, stack-trace links | Long `adb logcat` pipelines |
-| Gradle daemons | Isolated `GRADLE_USER_HOME` by default, idle cleanup | Shared daemon pool unless configured manually |
-| APK history | Browse cached successful outputs | Hunt through `build/outputs/apk` |
-| AI assistant context | Reviewable local evidence bundle plus Android skills for Codex, Claude, Copilot, Gemini, and Cursor | Manual screenshots, UIAutomator dumps, Logcat scans, and build-log summaries |
+- Open **Android: Logcat** even without a Gradle project. Filter by package, level, tag, text, regular expression, crashes, or stack traces; save filters and export the filtered logs.
+- Exclude noisy tags with a `-` prefix, such as `-OkHttp`, and jump from a stack-trace frame such as `MainActivity.kt:42` to its source line.
+- Pair a device with wireless ADB or connect through a configured remote ADB relay when USB is inconvenient.
 
-It also coexists cleanly with Android Studio. By default, extension builds use a dedicated `GRADLE_USER_HOME`, so panel builds do not share Studio's daemon pool. Idle daemons are stopped on a configurable timer with `./gradlew --stop`, scoped to the extension Gradle home unless you opt out of isolation.
+## Debug Kotlin and Java apps
 
-## What you get
+Build and deploy a debuggable app, then run **Android: Attach Debugger to Process**. The included JDWP debugger supports Kotlin and Java source breakpoints, stepping, and variables without a separate debugger extension. It attaches to a running process; it does not launch under the debugger or debug native C/C++ code.
 
-### Build and deploy
+## Compose Preview on a device
 
-- Build, install, deploy, clean, and sync Android Gradle projects from the Android side panel.
-- Pick the active Android Gradle root, module, and build variant without memorizing task names.
-- Run **Cold AVD + Install**: assemble while an offline emulator starts, then install when it finishes booting.
-- Launch the app after install using the detected `applicationId` / `namespace`, with a manual override when needed.
-- Cache successful APK outputs for rollback, comparison, sharing, or re-install.
+Click **Preview on device** above a `@Preview` function, or run **Android: Run Compose Preview on Device**. The extension installs the debug variant of the app module on the selected device, opens the preview with `PreviewActivity`, and shows a screenshot beside the editor. The app module needs `debugImplementation("androidx.compose.ui:ui-tooling")`; **Android: Run Diagnostics** checks for it.
 
-### Devices and variants
+Previews in library modules and test source sets, and multipreview annotations declared in another file, are not supported yet. `@Preview` arguments such as `device`, `uiMode`, and `locale` are not applied; the preview uses the device's settings.
 
-- Switch physical devices and emulators from the run widget's deployment target or the status bar.
-- Auto-select a sensible target when devices connect, reconnect, or disappear.
-- Sync finds modules and build variants from Gradle, like Android Studio, and runs once by itself the first time a project opens (turn that off with `syncOnFirstOpen`). Until then, Run builds the default install task, shown as "debug · default".
-- Reuse variant discovery results when Gradle inputs are unchanged, including when the same project is reopened under a different VS Code workspace identity.
-- Keep multi-root workspaces explicit with a dedicated Gradle root picker.
+## Optional AI tools
 
-### Logcat and build output
+The AI Toolchain page checks for the [Google Android CLI](https://developer.android.com/tools/agents/android-cli) and, when you choose to set them up, links bundled Android troubleshooting skills into detected folders for Codex, Claude, Copilot, Gemini, or Cursor. You can also collect focused build errors, diagnostics, and Logcat in a local Agent Context Bundle for review or sharing. None of these tools is required to build, run, or debug an app.
 
-- Open Android Logcat from any folder—or with no folder open—in a dedicated webview with level, tag, package, crash, stack-trace, text, and regex filters.
-- Prefix a tag with `-` (for example, `-OkHttp`) to exclude matching tags; combine exclusions with ordinary include tags when narrowing noisy streams.
-- Restart Logcat without clearing the device-wide buffer by default; use the overflow **Clear device buffer...** action when you intentionally want `adb logcat -c`.
-- Save frequent filter combinations as presets and export filtered output as `.txt` / `.log`.
-- Open stack traces such as `File.kt:42` directly in the editor.
-- End builds with a structured summary: result, duration, APK path, and extracted failure reasons.
-- Keep full errors available through **Android: Show Full Build Errors** when a build fails.
+**Agent MCP server (off by default).** Run **Android: Connect AI Agent (MCP)…** to start a local server on `127.0.0.1` and copy ready-to-paste configuration for Claude Code, Codex, or Cursor; VS Code discovers it automatically when its MCP API is available. Coding agents then work on the same Gradle root, module, variant, and device you selected in the panel:
 
-### Release, debug, and remote workflows
+- `android_state` reports that selection and the last build result.
+- `android_check` compiles only the modules with changed files and returns errors as `file:line:column` entries instead of the full Gradle log.
+- `android_run` builds, installs, and launches on the selected device, and `android_preview` renders a Compose preview there. Both need `android-ide-extension.agentMcpAllowDeviceActions`.
+- `android_logcat` returns the app's logs since its last launch, crashes first.
 
-- Set up release signing from the panel: pick or generate a keystore, detect aliases, store passwords in VS Code SecretStorage, and inject `signingConfigs` into Gradle files with a diff preview. If your build already signs releases its own way, choose **Don't show again** on the signing notice.
-- Attach the Android JDWP debugger to a running Java / Kotlin process through local `adb` port forwarding.
-- Use Wireless Remote ADB over same Wi-Fi, VPN / mesh, or an internet relay backed by [`adb-relay-android`](https://github.com/AndroidGradleTools/adb-relay-android) and [`adb-relay-jvm`](https://github.com/AndroidGradleTools/adb-relay-jvm).
+Agent builds wait in the same queue as panel builds, so they never collide on Gradle locks, and they add to **Build output** without replacing your last build's errors. Requests need a bearer token kept in VS Code SecretStorage; rotate it with **Android: Rotate Agent MCP Token**. These settings can only be changed in user settings, not by a workspace.
 
-### AI Toolchain
+**Integrated terminals use the extension's JDK.** In an Android workspace, new terminals get the `JAVA_HOME` (and `PATH` entry) that extension builds use, so `./gradlew` in a terminal matches panel builds. Set `android-ide-extension.terminalGradleEnv` to `javaHomeAndUserHome` to share the extension's Gradle home too, or `off` to leave terminals alone.
 
-- Check the optional [official Android CLI](https://developer.android.com/tools/agents/android-cli) in the same local or Remote-SSH extension host that runs Gradle and ADB.
-- List and search Google-maintained official Android skills without changing the environment; initialize or update them only after an explicit click and modal confirmation.
-- Export diagnostics as stable schema-v1 JSON, including whether the extension host is local or remote.
-- Run **Android: Create Agent Context Bundle** to collect bounded, redacted diagnostics, focused build errors, Logcat, a selected-device screenshot, and structured UI layout evidence into extension storage. The command opens `context.md` for review and never uploads or invokes a model.
-- Open **AppFunctions Lab** from the panel's Tool windows, or run **Android: Inspect AppFunctions (Experimental)**, to inspect AppFunctions readiness. It keeps compile SDK, Jetpack/KSP setup, service metadata, KDoc coverage, device recovery, and structured identifiers, descriptions, parameters, and response schemas together in the panel; it never builds, installs, enables, disables, or executes a function.
-- Keep official Android skills separate from the four extension-owned skills below. Official skills are managed by Android CLI; extension skills are symlinked into detected agent folders by this extension.
-- Link bundled extension skills into detected Codex, Claude, Copilot, Gemini, and Cursor home folders from the AI Toolchain page's agent-by-skill grid.
-- Use `android-screen-inspector`, `android-build-triage`, `android-logcat-debugger`, and `android-device-lab` for adb-first screen reads, build failure diagnosis, runtime log analysis, and device / emulator verification.
-- Keep the extension as the source of truth: enabled agents receive extension-owned symlinks, disabling removes only those symlinks, and agents stay dimmed in the grid until the matching agent folder exists.
-- Replace broken or third-party skill symlinks only after an explicit confirmation, while preserving real user-owned files.
-- Discover the AI Toolchain from a one-line tip under the run widget; dismissals stay quiet for 7 days unless a new agent folder appears.
+## Requirements and scope
 
-### Panel polish
+- **VS Code 1.85+** and an existing Android Gradle project with its Gradle Wrapper.
+- **Android SDK with ADB** and a JDK compatible with the project's Android Gradle Plugin.
+- **A deployment target:** a connected Android device or an AVD with the Android Emulator SDK package.
 
-- Run, build, sync and attach from an Android Studio–style run widget: module | variant, deployment target, then ▶ Run 'app', which becomes ■ Stop with a timer while Gradle runs.
-- Open Logcat, Build output and System log from the tool windows docked at the bottom of the panel, and APK builds, Signing, AppFunctions Lab and AI Toolchain from Other tools, each with live details such as the last build result.
-- Keep the main Android panel available outside Gradle projects: device, wireless ADB, Logcat, system logs, settings, and AI Toolchain remain active while project-only actions say "Needs Gradle".
-- Configure the extension from a searchable Settings page grouped like Android Studio's settings, with value summaries, modified markers and per-setting Reset.
-- Open Settings, Release signing, Pair Devices Using Wi‑Fi, AppFunctions Lab and AI Toolchain as full-panel pages with Back, breadcrumbs and Esc.
-- Turn on the optional Android Studio keymap (`keymap` setting) for ⌃R Run, ⌘F9 Build, ⌘F2 Stop and ⌘6 Logcat (Shift+F10, Ctrl+F9, Ctrl+F2 and Alt+6 on Windows and Linux).
-- Watch Gradle and Kotlin JVMs from the status strip meter, which opens CPU and RAM sparklines, process chips and Stop Gradle Daemons.
-- Show the active device in the status bar.
-- Submit crash reports only after reviewing a sanitized payload in the browser; nothing is sent automatically.
+The extension runs on the local or Remote-SSH workspace host, where Gradle, the SDK, and ADB need to be available. With Remote-SSH, ADB runs on the remote host, so a USB device attached only to your laptop is not visible there; use wireless ADB or a configured relay to connect the device remotely. Device selection, Logcat, wireless ADB, system logs, and settings also work when no Gradle project is open.
 
-## Get started
+Open the Command Palette and type **Android:** for extension commands. Most setup happens from the Android panel gear: set the SDK path, Gradle JDK, build settings, and optional Android Studio `keymap`.
 
-1. Open the **Android** side panel from the activity bar, or run **Android: Open side panel**. A Gradle project is optional for device, Logcat, wireless ADB, system log, settings, and AI Toolchain workflows.
-2. For build workflows, open a standard Android Gradle project with `gradlew` or `gradlew.bat`.
-3. Pick a Gradle root, module / variant, and device.
-4. Click **▶ Run 'app'** to build, install and launch, or use Build, Sync and ⋮ More (Clean Project) in the run widget.
-5. Open **Logcat** from the panel or run **Android: Logcat**; use `-TagName` to suppress noisy tags.
-6. Optional: open **AI Toolchain** from Tool windows to check Android CLI and manage official or extension-owned Android skills.
+## Common questions
 
-If setup behaves strangely, run **Android: Run Diagnostics** and open **Android: Show System Gradle Log** to inspect the generated preflight report. Use **Android: Export Diagnostics as JSON** for a structured report, or **Android: Create Agent Context Bundle** when another developer or agent needs reviewable local evidence.
+### Can I build a Kotlin Android app in VS Code?
 
-## Requirements
+Yes. Open an existing Android Gradle project, including one using `build.gradle.kts`. The extension runs its Gradle Wrapper, installs the app through ADB, shows Logcat, and can attach to a debuggable process. Install a separate Kotlin language extension for editing features.
 
-- VS Code or Cursor compatible with VS Code `^1.85.0`.
-- A standard Android Gradle project with a Gradle Wrapper is required for build, install, signing, and Gradle diagnostics—not for standalone device and Logcat tools.
-- `adb` on `PATH`, or an Android SDK path configured in the extension.
-- Android Emulator is optional; when configured, the device picker can start AVDs.
-- Android CLI is optional. Install it from the [official Android agent tools documentation](https://developer.android.com/tools/agents/android-cli) only when you want Google-maintained skills; existing Gradle, ADB, diagnostics, bundles, and extension skills do not require it.
-- A JDK for Gradle. You can set it from the panel settings or `android-ide-extension.gradleJavaHome`.
+### Do I need Android Studio?
 
-## Commands
+No. For this build, install, run, Logcat, and debug workflow, you need a JDK supported by your project's Android Gradle Plugin and the Android SDK. You can install the SDK with [Android SDK command-line tools](https://developer.android.com/tools). Android Studio remains useful for interactive Compose Preview, visual design, and profilers; this extension can render a single preview on a device.
 
-| Command | Purpose |
-|---|---|
-| **Android: Open side panel** | Open the main Android workflow surface |
-| **Android: Build Project** / **Android: Build and Install** | Compile or install the selected target |
-| **Android: Stop Gradle Task** | Cancel the running panel build, install, clean or sync |
-| **Android: Clean Project** / **Android: Sync Gradle project** | Run common Gradle maintenance flows |
-| **Android: Build Variants** / **Android: Pick Gradle module** / **Android: Pick Gradle root** | Control active Gradle context |
-| **Android: Select Device** | Pick a device or emulator |
-| **Android: Run Diagnostics** | Print a preflight report for Gradle root, SDK / ADB, JDK, device, AVD, module, and variant setup |
-| **Android: Export Diagnostics as JSON** | Save the same diagnostics as a local schema-v1 JSON document with execution-host context |
-| **Android: Create Agent Context Bundle** | Create a bounded, redacted local evidence bundle and open `context.md` for review |
-| **Android: Inspect AppFunctions (Experimental)** | Audit readiness and inspect registered function contracts on the selected device without execution |
-| **Android: Logcat** | Open the integrated Logcat viewer |
-| **Android: Open cached APK builds** | Browse successful cached outputs |
-| **Android: Set up release signing** | Create or select signing configuration |
-| **Android: Attach Debugger to Process** | Attach JDWP debugger to a running app process |
-| **Android: Wireless / remote ADB (guided setup)** | Configure remote device access |
-| **Android: Stop Gradle daemons** | Stop extension-scoped Gradle daemons |
+### Does the Android emulator run inside VS Code?
 
-## Settings
+No. The extension starts and targets a standard Android Virtual Device through the Android SDK. If the selected emulator is stopped, it can boot while Gradle builds your app.
 
-Most setup happens from the Android panel gear, which opens a searchable Settings page grouped like Android Studio's: choose a Gradle JDK, point to an Android SDK, tune Gradle daemon cleanup, switch to the Android Studio keymap, and reach Release signing, Wi‑Fi pairing and the AI Toolchain from the same tree.
+### Why does my build behave differently from Android Studio or the terminal?
 
-You can also search **Android Gradle Tools** in VS Code Settings when you prefer the full settings view.
+By default, a separate `GRADLE_USER_HOME` keeps the extension's daemons and caches apart. The first build may download Gradle and dependencies again. Gradle also will not read your usual `~/.gradle/gradle.properties` or `~/.gradle/init.d` from that separate home. Turn off `android-ide-extension.gradleIsolateUserHome` to use your normal Gradle home, or set `android-ide-extension.gradleUserHome` to a specific directory. If the first sync failed, change the setting and select **Retry**.
 
-| Area | Key settings |
-|---|---|
-| Gradle tasks | `installTask`, `buildTask`, `defaultGradleModule`, `gradleExtraArgs`, `syncOnFirstOpen` |
-| Gradle runtime | `gradleRunner`, `gradleJavaHome`, `buildOutputChannel` |
-| Daemon hygiene | `gradleIsolateUserHome`, `gradleUserHome`, `gradleDaemonIdleStopMinutes`, `stopGradleDaemonsOnDeactivate` |
-| Android SDK / device | `androidSdkPath`, `emulatorLaunchArgs`, `showStatusBarDevice` |
-| Post-install launch | `launchAppAfterInstall`, `launchApplicationId` |
-| Keyboard | `keymap` |
-| Wireless Remote ADB | `remoteAdbRelayUrl`, `remoteAdbListenHost`, `remoteAdbLocalPort` |
-| AI Toolchain | `androidCliPath` |
-| Privacy | `crashReportEnabled` |
+Integrated terminals get only the extension's JDK by default, so `./gradlew` in a terminal still reads your usual `~/.gradle`. If you set `android-ide-extension.terminalGradleEnv` to `javaHomeAndUserHome`, terminal builds use the extension's Gradle home instead and share its daemons; idle auto-stop skips daemons that are still building.
 
-Sensible defaults work for typical debug workflows. The most important default is `gradleIsolateUserHome = true`, which keeps extension Gradle daemons separate from Android Studio and your normal `~/.gradle` pool.
+## Privacy and support
 
-## Frequently asked questions
+Agent Context Bundles stay in the extension's local global storage; the extension does not upload them. The agent MCP server listens only on `127.0.0.1`, rejects requests without its token or from web pages, and sends nothing off the machine; what an agent does with tool results is up to that agent. A bundle can contain app text, screenshots, paths, package IDs, device serials, or stack traces, so review it before sharing. If an error offers **Report**, choosing it opens `https://androidgradletools.org` with a sanitized error payload in the URL. The site receives that URL when opened; a crash report is submitted only after you press **Submit**. Disable this flow with `android-ide-extension.crashReportEnabled` if preferred.
 
-### Can I build Android apps in VS Code?
-
-Yes. Open a standard Android Gradle project and use Android Gradle Tools to select a Gradle root, module, build variant, and device, then build, install, or launch the app from the Android panel. Android Studio remains useful for specialized profilers and design tooling, but it is not required for the routine Gradle-to-device loop.
-
-### How do I view Android Logcat in VS Code?
-
-Run **Android: Logcat** or open Logcat from the Android panel, even when no Gradle project is open. You can filter by package, tag, level, crashes, stack traces, text, or regular expressions; prefix a tag with `-` to exclude it, then export the filtered output when you need to share or inspect it elsewhere.
-
-### Can VS Code launch an Android emulator?
-
-Yes. The device picker discovers configured Android Virtual Devices and can start an AVD before installing an app. **Cold AVD + Install** builds while the emulator boots, then installs after the device is ready.
-
-### Can AI agents inspect an Android app and device?
-
-Yes. The optional AI Toolchain manages official Android CLI skills and extension-owned Android development skills. **Android: Create Agent Context Bundle** collects bounded, redacted diagnostics, focused build errors, Logcat, a selected-device screenshot, and structured UI evidence locally for review before sharing with an agent.
-
-### How can I support Android Gradle Tools?
-
-If the extension improves your Android workflow, leave an honest [Marketplace rating or review](https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension), or report a reproducible problem through [GitHub issues](https://github.com/AndroidGradleTools/android-ide-extension/issues). The extension does not interrupt your work with review prompts.
-
-## Privacy and crash reporting
-
-Crash reporting is opt-in at the point of submission. When an unexpected extension error is caught, Android Gradle Tools can open a browser page with a sanitized payload for review. Nothing leaves your machine until you press **Submit**.
-
-Crash reporting can be turned off from the panel settings or VS Code Settings.
-
-The bundled extension skills are local and adb-first. Screen inspection is read-only, and the skills do not send data to any network service by themselves.
-
-Agent Context Bundles are also local. They are written under the extension's global storage, are limited and redacted for common secret assignments/query values, and open in the editor with a review-before-sharing warning. A bundle may still contain application text, device screenshots, paths, package ids, serials, or stack traces, so inspect it before copying its folder path or revealing it to another tool.
+For reproducible problems, [open a GitHub issue](https://github.com/AndroidGradleTools/android-ide-extension/issues). If it helps your workflow, you can leave an honest [Marketplace review](https://marketplace.visualstudio.com/items?itemName=AndroidGradleTools.android-ide-extension).
 
 ## Release notes
 
-### 1.2.0 - 2026-09-28
+### 1.3.0 — 2026-09-30
 
-- Reworked the Android panel around a Studio-style run widget, bottom tool windows, a Gradle status strip, and focused notices. Build, Sync, Run, debugger attachment, Logcat, signing, and AI tools stay within the panel.
-- Sync now refreshes modules and build variants, runs once when a project first opens by default, and shows a Retry notice if it fails. Run uses the selected variant, including flavored builds.
-- Moved Settings, Release signing, wireless pairing, AppFunctions Lab, and AI Toolchain into full-panel pages. Settings now support search, modified markers, and per-setting Reset.
-- Added Stop while a Gradle job runs, an optional Android Studio keymap, and a project-level way to dismiss release signing checks when Gradle already handles them.
+- Added **Preview on device** above Compose `@Preview` functions: the extension installs the app module's debug build, opens the preview through `PreviewActivity`, and shows a screenshot beside the editor.
+- Added an opt-in local MCP server so Claude Code, Codex, Cursor, and Copilot can check compile errors, run the app, render previews, and read Logcat on the module, variant, and device you selected. The panel's status strip shows connected agents and running tool calls.
+- Panel builds, syncs, previews, and agent runs now share one Gradle queue, and integrated terminals get the extension's JDK.
+- Added a What's New tab with illustrated how-to steps, opened from a one-time panel tip after an update or with **Android: What's New**.
 
-### 1.1.1 - 2026-09-18
+### 1.2.0 — 2026-09-28
 
-- Fixed the experimental AppFunctions Lab full-panel inspector so its opaque surface cleanly covers the normal Gradle panel instead of letting controls, the AI Agents banner, and JVM telemetry show through and overlap its content.
-- Added regression coverage that keeps the Lab overlay bound to the shared panel background token.
+- Reworked the Android panel around a Studio-style run widget, bottom tool windows, a Gradle status strip, and focused notices.
+- Sync now refreshes modules and variants, including flavored builds, and runs once when a project first opens by default. A failed sync offers **Retry**.
+- Moved Settings, Release signing, wireless pairing, AppFunctions Lab, and AI Toolchain into full-panel pages. Settings support search and per-setting Reset.
+- Added Stop for a running Gradle job, an optional Android Studio keymap, and a project-level way to dismiss signing checks when Gradle already handles release signing.
 
 [Full changelog](CHANGELOG.md)
