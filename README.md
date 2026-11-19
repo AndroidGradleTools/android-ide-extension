@@ -97,18 +97,15 @@ For reproducible problems, [open a GitHub issue](https://github.com/AndroidGradl
 
 ## Release notes
 
+### 1.3.1 - 2026-11-20
+
+- Fixed **Build and Install** launching another flavor's app when that flavor had a newer APK. It now launches the variant Gradle just installed, and the APK cache copies that variant's APK. When the variant can't be told apart, Build output says why instead of launching a guess.
+
 ### 1.3.0 — 2026-09-30
 
 - Added **Preview on device** above Compose `@Preview` functions: the extension installs the app module's debug build, opens the preview through `PreviewActivity`, and shows a screenshot beside the editor.
 - Added an opt-in local MCP server so Claude Code, Codex, Cursor, and Copilot can check compile errors, run the app, render previews, and read Logcat on the module, variant, and device you selected. The panel's status strip shows connected agents and running tool calls.
 - Panel builds, syncs, previews, and agent runs now share one Gradle queue, and integrated terminals get the extension's JDK.
 - Added a What's New tab with illustrated how-to steps, opened from a one-time panel tip after an update or with **Android: What's New**.
-
-### 1.2.0 — 2026-09-28
-
-- Reworked the Android panel around a Studio-style run widget, bottom tool windows, a Gradle status strip, and focused notices.
-- Sync now refreshes modules and variants, including flavored builds, and runs once when a project first opens by default. A failed sync offers **Retry**.
-- Moved Settings, Release signing, wireless pairing, AppFunctions Lab, and AI Toolchain into full-panel pages. Settings support search and per-setting Reset.
-- Added Stop for a running Gradle job, an optional Android Studio keymap, and a project-level way to dismiss signing checks when Gradle already handles release signing.
 
 [Full changelog](CHANGELOG.md)

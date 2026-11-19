@@ -4,6 +4,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-11-20
+
+- **Build and Install launches the variant it installed.** With several flavors built, auto-launch could start another flavor's app because it read the newest APK in the module. It now takes the module and variant from Gradle's install log or the install task and reads that variant's `output-metadata.json`, even when packaging is up to date. When the variant can't be told apart, it says why in Build output and skips the launch. The APK cache now copies the same variant's APK, or says in Build output why it didn't.
+- **Release metadata.** Bumped the package, lockfile, feature catalog, and README release notes to 1.3.1.
+
 ## [1.3.0] - 2026-09-30
 
 - **What's New.** After an update, the Android panel shows a one-time "What's new in 1.3" tip. It opens a What's New tab with key highlights, illustrated how-to steps, and Try it actions for the new features. Reopen it any time with **Android: What's New** or ⋮ More → What's New.
