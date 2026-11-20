@@ -26,7 +26,7 @@ If setup fails, run **Android: Run Diagnostics** from the Command Palette to che
 - Run on a connected device or emulator. If the selected AVD is stopped, the extension can boot it while Gradle builds the app.
 - See the build result, duration, APK path, and extracted failure reasons; open the full Gradle output for details. Use **Android: Stop Gradle Task** to cancel a running task.
 - Browse cached APK builds, reinstall an earlier APK, or reveal its file for manual comparison or sharing.
-- Set up release signing with a keystore picker or generator. Review a proposed Gradle file change before applying it. When you choose VS Code SecretStorage for passwords, the extension passes them to its Gradle process; terminal and CI builds need their own credentials.
+- Set up release signing with a keystore picker or generator. Review a proposed Gradle file change before applying it. The extension passes the saved keystore values to its Gradle process for every storage method; terminal and CI builds need their own credentials.
 
 ## Logcat and ADB in VS Code
 
@@ -97,15 +97,15 @@ For reproducible problems, [open a GitHub issue](https://github.com/AndroidGradl
 
 ## Release notes
 
+### 1.4.0 - 2026-11-20
+
+- Fixed **release signing**: the generated block no longer breaks the build script, and all three ways of keeping the passwords now sign.
+- Fixed **flavored projects and modules**: Build Variants lists real variants, the variant follows the module you pick, and `defaultGradleModule` works.
+- Fixed the **debugger** (breakpoints in lambdas and top-level functions, object fields in Variables) and **Logcat** (crashes right after launch stay in the package filter).
+- Fixed Gradle on **Windows** paths with spaces, Settings fields that reset while typing, and more than fifty smaller bugs. See the changelog for the full list.
+
 ### 1.3.1 - 2026-11-20
 
 - Fixed **Build and Install** launching another flavor's app when that flavor had a newer APK. It now launches the variant Gradle just installed, and the APK cache copies that variant's APK. When the variant can't be told apart, Build output says why instead of launching a guess.
-
-### 1.3.0 — 2026-09-30
-
-- Added **Preview on device** above Compose `@Preview` functions: the extension installs the app module's debug build, opens the preview through `PreviewActivity`, and shows a screenshot beside the editor.
-- Added an opt-in local MCP server so Claude Code, Codex, Cursor, and Copilot can check compile errors, run the app, render previews, and read Logcat on the module, variant, and device you selected. The panel's status strip shows connected agents and running tool calls.
-- Panel builds, syncs, previews, and agent runs now share one Gradle queue, and integrated terminals get the extension's JDK.
-- Added a What's New tab with illustrated how-to steps, opened from a one-time panel tip after an update or with **Android: What's New**.
 
 [Full changelog](CHANGELOG.md)
